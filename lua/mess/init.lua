@@ -32,6 +32,7 @@ function Message.show()
 		view:unlock()
 		view:clear()
 		view:message()
+		view:focus()
 		view:lock()
 	else
 		-- "Message is not open"
@@ -55,4 +56,5 @@ function Message.close()
 		view = nil
 	end
 end
+
 return Message

@@ -50,6 +50,10 @@ function View:clear()
 	return vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, {})
 end
 
+function View:focus()
+	return vim.api.nvim_set_current_win(self.win)
+end
+
 function View:unlock()
 	self:set_option("modifiable", true)
 	self:set_option("readonly", false)
