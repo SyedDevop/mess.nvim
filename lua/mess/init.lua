@@ -1,46 +1,41 @@
--- vim.cmd("10split")
--- local vwin = vim.api.nvim_get_current_win()
--- local buf = vim.api.nvim_create_buf(false, true)
--- vim.api.nvim_win_set_buf(vwin, buf)
---
--- vim.api.nvim_win_call(vwin, function()
--- 	vim.cmd([[put = execute('message') ]])
--- end)
---
--- local function closeMY(win, buf)
--- 	if vim.api.nvim_win_is_valid(win) then
--- 		vim.api.nvim_win_close(win, true)
--- 	end
--- 	if vim.api.nvim_buf_is_valid(buf) then
--- 		vim.api.nvim_buf_delete(buf, {})
--- 	end
--- end
---
--- vim.api.nvim_buf_set_keymap(buf, "n", "q", [[<cmd>lua closeMY()<cr>]], {
--- 	silent = true,
--- 	noremap = true,
--- 	nowait = true,
--- })
-
-local View = require("myMessage.view")
+local View = require("mess.view")
 local Message = {}
 
 ---@type nil|MessageView
 local view
+
+function Message.setup()
+	vim.api.nvim_create_user_command("Mess", function()
+		Message.toggle()
+	end, {})
+
+	vim.api.nvim_create_user_command("MessShow", function()
+		Message.show()
+	end, {})
+end
 
 function Message.is_open()
 	return view and view:is_valid() or false
 end
 
 function Message.open()
+	vim.cmd("10split")
+	view = View:new()
+	view:attach()
+	view:message()
+	view:lock()
+end
+
+function Message.show()
 	if view then
+		-- "Message is already open"
+		view:unlock()
 		view:clear()
 		view:message()
-	else
-		vim.cmd("10split")
-		view = View:new()
-		view:attach()
 		view:lock()
+	else
+		-- "Message is not open"
+		Message.open()
 	end
 end
 
@@ -54,4 +49,10 @@ function Message.toggle()
 	end
 end
 
+function Message.close()
+	if Message.is_open() and view then
+		view:close()
+		view = nil
+	end
+end
 return Message
