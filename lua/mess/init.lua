@@ -20,7 +20,7 @@ end
 
 function Message.open()
 	vim.cmd("10split")
-	view = View:new()
+	view = View.new()
 	view:attach()
 	view:message()
 	view:lock()

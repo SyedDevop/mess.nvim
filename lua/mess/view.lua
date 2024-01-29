@@ -5,10 +5,11 @@ local View = {}
 View.__index = View
 
 ---@return MessageView
-function View:new()
-	self.buf = vim.api.nvim_create_buf(false, true)
-	self.win = vim.api.nvim_get_current_win()
-	return self
+function View.new()
+	return setmetatable({
+		buf = vim.api.nvim_create_buf(false, true),
+		win = vim.api.nvim_get_current_win(),
+	}, View)
 end
 
 function View:attach()
