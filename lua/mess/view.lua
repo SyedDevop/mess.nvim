@@ -13,8 +13,8 @@ function View.new()
 end
 
 function View:attach()
+	vim.api.nvim_buf_set_name(self.buf, "Message View")
 	vim.api.nvim_win_set_buf(self.win, self.buf)
-
 	vim.api.nvim_buf_set_keymap(self.buf, "n", "q", [[<cmd>lua require('mess').close()<cr>]], {
 		silent = true,
 		noremap = true,
