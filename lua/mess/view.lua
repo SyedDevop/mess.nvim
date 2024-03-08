@@ -24,7 +24,16 @@ end
 
 function View:message()
 	vim.api.nvim_win_call(self.win, function()
-		vim.cmd([[put = execute('message') ]])
+		local line = vim.api.nvim_exec2("message", { output = true })
+		local output = vim.fn.split(line["output"], "\n")
+
+		if #output == 0 then
+			return
+		end
+
+		vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, output)
+		vim.api.nvim_win_set_cursor(self.win, { #output, 1 })
+		-- vim.cmd([[put=execute('message') ]])
 	end)
 end
 
@@ -42,6 +51,8 @@ function View:close()
 	if vim.api.nvim_buf_is_valid(self.buf) then
 		vim.api.nvim_buf_delete(self.buf, {})
 	end
+	-- self.win = nil
+	-- self.buf = nil
 end
 function View:is_valid()
 	return vim.api.nvim_buf_is_valid(self.buf) and vim.api.nvim_buf_is_loaded(self.buf)

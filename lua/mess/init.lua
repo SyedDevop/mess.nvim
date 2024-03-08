@@ -18,6 +18,7 @@ function Message.is_open()
 	return view and view:is_valid() or false
 end
 
+-- FIX: Check if cursor is on the message buf then use the same buf.
 function Message.open()
 	vim.cmd("10split")
 	view = View.new()
@@ -34,6 +35,7 @@ function Message.show()
 		view:message()
 		view:focus()
 		view:lock()
+		view = nil
 	else
 		-- "Message is not open"
 		Message.open()
